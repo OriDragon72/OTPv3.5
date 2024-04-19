@@ -1,0 +1,69 @@
+import os
+import random
+import string
+
+
+#Generate Random Key
+def GRK(length):
+  key = []
+
+  for i in range(length):
+    rk = random.choice(string.ascii_letters)
+    key.append(rk)
+
+  return ''.join(key)
+
+#String to Unicode
+def S2C_binary(message):
+  binary_list = []
+  for char in message:
+    ascii_code = ord(char)
+    binary_code = bin(ascii_code)[2:].zfill(8)
+    binary_list.append(binary_code)
+  return binary_list
+
+def C2S_binary(binary_list):
+  message = ''
+  for binary_code in binary_list:
+    ascii_code = int(binary_code, 2)  # Convert binary code to ASCII code
+    char = chr(ascii_code)  # Get the character from the ASCII code
+    message += char
+  return message
+
+def B2A(binary_code):
+  ascii_letters = []
+  for i in range(0, len(binary_code), 8):
+    char_binary = binary_code[i:i+8]
+    ascii_code = int(char_binary, 2)
+    ascii_char = chr(ascii_code)
+    ascii_letters.append(ascii_char)
+  return ''.join(ascii_letters)
+
+def XOR(a, b, c):
+  e = []
+
+  for i in range(c):
+    d = int(a[i]) ^ int(b[i])
+    e.append(str(d))
+
+  return ''.join(e)
+
+print("Welcome to OTPV2.34 [aka. One Time Pad: version 2.34]")
+print("Would you like to encrypt or decrypt?")
+ans = input("[e/d]: ")
+
+if ans == "e":
+  os.system("clear")
+  print("Encrypting...\n")
+  mgs = input("Enter message: ")
+  key = GRK(len(mgs))
+  BMGS = S2C_binary(mgs)
+  BKEY = S2C_binary(key)
+  EBMGS = XOR(BMGS, BKEY, len(mgs))
+  EMGS = B2A(EBMGS)
+  print("Encrypted Message: " + EMGS)
+  print("Key used: " + key)
+  #elif ans == "d":
+else:
+  print("Invalid input")
+  exit(404)
